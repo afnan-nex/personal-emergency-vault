@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Emergency Vault</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency-systems-regular/48/ffffff/bank-safe.png" />
+    <meta name="description" content="Secure personal emergency vault for contacts, links, and messaging." />
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+        /* ============================================================
+   GOOGLE FONTS — Poppins
+   ============================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        /* ============================================================
+   RESET & BASE
+   ============================================================ */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --font: 'Poppins', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        ::selection {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* ============================================================
+   BACKGROUND ORBS — hidden in monochrome mode
+   ============================================================ */
+        .bg-orbs {
+            display: none;
+        }
+
+        .orb {
+            display: none;
+        }
+
+        /* ============================================================
+   SCROLLBAR
+   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--white);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--black);
+            border-radius: 0;
+        }
+
+        /* ============================================================
+   GLASS CARD — replaced with flat bordered card
+   ============================================================ */
+        .glass {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        /* ============================================================
+   BUTTONS
+   ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 0;
+            border: 2px solid var(--black);
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: var(--font);
+            transition: background 0.15s, color 0.15s;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            background: var(--white);
+            color: var(--black);
+            letter-spacing: 0.03em;
+        }
+
+        .btn::after {
+            display: none;
+        }
+
+        .btn:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .btn:active {
+            opacity: 0.8;
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* Primary — same as base in monochrome */
+        .btn-primary {
+            background: var(--black);
+            color: var(--white);
+            box-shadow: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* Ghost */
+        .btn-ghost {
+            background: var(--white);
+            color: var(--black);
+            border: 2px solid var(--black);
+        }
+
+        .btn-ghost:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.78rem;
+        }
+
+        /* Icon button */
+        .btn-icon {
+            width: auto;
+            height: auto;
+            padding: 5px 10px;
+            border-radius: 0;
+            background: var(--white);
+            border: 2px solid var(--black);
+            color: var(--black);
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            flex-shrink: 0;
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .btn-icon:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* ============================================================
+   INPUTS
+   ============================================================ */
+        input,
+        textarea {
+            width: 100%;
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-radius: 0;
+            color: var(--black);
+            font-family: var(--font);
+            font-size: 0.92rem;
+            font-weight: 400;
+            transition: border-width 0.1s;
+            outline: none;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        input {
+            padding: 12px 14px;
+        }
+
+        textarea {
+            padding: 12px 14px;
+            resize: vertical;
+            min-height: 130px;
+            line-height: 1.65;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #888;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .input-wrapper input {
+            padding-left: 38px;
+        }
+
+        /* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: var(--white);
+            transition: opacity 0.4s ease;
+        }
+
+        #login-screen.hiding {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 48px 40px;
+            text-align: center;
+            border: 2px solid var(--black);
+            background: var(--white);
+        }
+
+        /* Vault icon — hidden in minimal mode */
+        .vault-icon {
+            display: none;
+        }
+
+        @keyframes pulse-icon {}
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+            color: var(--black);
+        }
+
+        .login-subtitle {
+            color: #555;
+            font-size: 0.85rem;
+            font-weight: 400;
+            margin-bottom: 36px;
+            letter-spacing: 0.01em;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .pass-wrapper {
+            position: relative;
+        }
+
+        .pass-wrapper input {
+            padding-left: 14px;
+            padding-right: 44px;
+            letter-spacing: 3px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Hide the lock emoji icon — clean look */
+        .pass-wrapper .lock-icon {
+            display: none;
+        }
+
+        .pass-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #555;
+            font-size: 1rem;
+            transition: color 0.15s;
+            padding: 4px;
+            font-family: var(--font);
+        }
+
+        .pass-toggle:hover {
+            color: var(--black);
+        }
+
+        .btn-unlock {
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .error-msg {
+            color: var(--black);
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 10px 14px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 0;
+            display: none;
+            text-align: center;
+            animation: shake 0.4s ease;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        .login-footer {
+            margin-top: 28px;
+            color: #888;
+            font-size: 0.74rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        /* ============================================================
+   DASHBOARD
+   ============================================================ */
+        #dashboard {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            padding: 32px 24px 64px;
+            background: var(--white);
+        }
+
+        #dashboard.visible {
+            display: block;
+        }
+
+        #dashboard.shown {
+            opacity: 1;
+        }
+
+        /* Header */
+        .dash-header {
+            max-width: 1100px;
+            margin: 0 auto 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .dash-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* Brand icon hidden */
+        .dash-brand-icon {
+            display: none;
+        }
+
+        .dash-brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--black);
+        }
+
+        .dash-brand-text span {
+            color: #777;
+            font-size: 0.78rem;
+            font-weight: 400;
+        }
+
+        .dash-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .session-badge {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 12px;
+            border: 2px solid var(--black);
+            background: var(--white);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--black);
+            border-radius: 0;
+            letter-spacing: 0.02em;
+        }
+
+        .session-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--black);
+            flex-shrink: 0;
+            animation: blink-dot 2s ease-in-out infinite;
+            border-radius: 0;
+        }
+
+        @keyframes blink-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.25;
+            }
+        }
+
+        /* Grid */
+        .dash-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Section Card */
+        .section-card {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 2px solid var(--black);
+            background: var(--white);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            flex-direction: column;
+        }
+
+        /* Section icon — hidden */
+        .section-icon {
+            display: none;
+        }
+
+        .icon-purple,
+        .icon-blue,
+        .icon-teal {
+            background: none;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--black);
+            border-bottom: 2px solid var(--black);
+            padding-bottom: 8px;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+
+        .section-count {
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: #777;
+            margin-top: 4px;
+            letter-spacing: 0.04em;
+        }
+
+        /* Search */
+        .section-search {
+            position: relative;
+        }
+
+        .section-search input {
+            padding: 9px 12px 9px 12px;
+            font-size: 0.85rem;
+        }
+
+        /* Hide search emoji icon */
+        .section-search .s-icon {
+            display: none;
+        }
+
+        /* ============================================================
+   CONTACTS LIST
+   ============================================================ */
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--black);
+            background: var(--white);
+            transition: background 0.12s;
+            animation: fade-up 0.25s ease forwards;
+        }
+
+        .contact-item:first-child {
+            border-top: 1px solid var(--black);
+        }
+
+        .contact-item:hover {
+            background: #f4f4f4;
+        }
+
+        /* Avatar — hidden */
+        .contact-avatar {
+            display: none;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--black);
+        }
+
+        .contact-phone {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-top: 2px;
+        }
+
+        /* Hide phone icon emoji */
+        .contact-phone>span:not(a) {
+            display: none;
+        }
+
+        .contact-phone a {
+            font-size: 0.78rem;
+            font-weight: 400;
+            color: #444;
+            text-decoration: none;
+            transition: color 0.1s;
+            -webkit-user-select: text;
+            user-select: text;
+            letter-spacing: 0.02em;
+        }
+
+        .contact-phone a:hover {
+            color: var(--black);
+            text-decoration: underline;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+   LINKS LIST
+   ============================================================ */
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--black);
+            background: var(--white);
+            transition: background 0.12s;
+            animation: fade-up 0.25s ease forwards;
+        }
+
+        .link-item:first-child {
+            border-top: 1px solid var(--black);
+        }
+
+        .link-item:hover {
+            background: #f4f4f4;
+        }
+
+        /* Emoji icon — hidden */
+        .link-emoji {
+            display: none;
+        }
+
+        .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .link-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--black);
+        }
+
+        .link-url {
+            font-size: 0.74rem;
+            font-weight: 400;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .link-open {
+            padding: 5px 14px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            border-radius: 0;
+            flex-shrink: 0;
+            background: var(--white);
+            border: 2px solid var(--black);
+            color: var(--black);
+            cursor: pointer;
+            font-family: var(--font);
+            transition: background 0.12s, color 0.12s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        .link-open:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* ============================================================
+   DISCORD SECTION
+   ============================================================ */
+        .discord-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .char-counter {
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: #777;
+            text-align: right;
+            margin-top: -6px;
+            letter-spacing: 0.03em;
+        }
+
+        .char-counter.warn {
+            color: #555;
+        }
+
+        .char-counter.over {
+            color: var(--black);
+            font-weight: 700;
+        }
+
+        .discord-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .discord-hint {
+            font-size: 0.74rem;
+            font-weight: 400;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.02em;
+        }
+
+        .discord-hint span {
+            color: var(--black);
+        }
+
+        .btn-send {
+            min-width: 120px;
+        }
+
+        .btn-send.loading .label-text {
+            display: none;
+        }
+
+        .btn-send.loading .spinner {
+            display: block;
+        }
+
+        .btn-send .spinner {
+            display: none;
+        }
+
+        /* ============================================================
+   SPINNER
+   ============================================================ */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #bbb;
+            border-top-color: var(--black);
+            border-radius: 50%;
+            animation: spin 0.65s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================
+   EMPTY STATE
+   ============================================================ */
+        .empty-state {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            font-weight: 400;
+            padding: 28px 16px;
+            letter-spacing: 0.03em;
+        }
+
+        .empty-state .es-icon {
+            display: none;
+        }
+
+        /* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            min-width: 220px;
+            max-width: 320px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 0;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--black);
+            box-shadow: none;
+            backdrop-filter: none;
+            animation: toast-in 0.25s ease forwards;
+            pointer-events: auto;
+            letter-spacing: 0.02em;
+        }
+
+        .toast.out {
+            animation: toast-out 0.2s ease forwards;
+        }
+
+        /* All toast types identical — monochrome */
+        .toast-success,
+        .toast-error,
+        .toast-info {
+            background: var(--white);
+            border-color: var(--black);
+            color: var(--black);
+        }
+
+        @keyframes toast-in {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toast-out {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+        }
+
+        /* ============================================================
+   SESSION TIMEOUT OVERLAY
+   ============================================================ */
+        #timeout-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(255, 255, 255, 0.96);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        #timeout-overlay.show {
+            display: flex;
+        }
+
+        .timeout-card {
+            max-width: 340px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid var(--black);
+            background: var(--white);
+        }
+
+        .timeout-icon {
+            display: none;
+        }
+
+        .timeout-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+            color: var(--black);
+        }
+
+        .timeout-msg {
+            color: #666;
+            font-size: 0.84rem;
+            font-weight: 400;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+   ANIMATIONS
+   ============================================================ */
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ============================================================
+   RESPONSIVE
+   ============================================================ */
+        @media (max-width: 680px) {
+            .login-card {
+                padding: 32px 20px;
+            }
+
+            .dash-header {
+                margin-bottom: 20px;
+            }
+
+            .dash-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .section-card {
+                padding: 18px;
+            }
+
+            #toast-container {
+                right: 10px;
+                bottom: 12px;
+            }
+
+            .toast {
+                min-width: 180px;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .dash-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 700px) and (max-width: 1099px) {
+            .dash-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ============================================================
+   DIVIDER
+   ============================================================ */
+        .divider {
+            height: 1px;
+            background: var(--black);
+            margin: 4px 0;
+        }
+
+        /* ============================================================
+   MISC
+   ============================================================ */
+        a {
+            color: inherit;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+    <section id="login-screen" role="main" aria-label="Login">
+        <div class="glass login-card">
+            <div class="vault-icon" aria-hidden="true"></div>
+            <h1 class="login-title">Emergency Vault</h1>
+            <p class="login-subtitle">Enter your password to access the vault</p>
+
+            <div class="login-form" id="login-form">
+                <div class="pass-wrapper">
+                    <span class="lock-icon" aria-hidden="true"></span>
+                    <input type="password" id="pass-input" placeholder="Enter password…" autocomplete="current-password"
+                        aria-label="Password" spellcheck="false" />
+                    <button class="pass-toggle" id="pass-toggle" type="button" aria-label="Toggle password visibility">
+                        Show
+                    </button>
+                </div>
+
+                <div class="error-msg" id="error-msg" role="alert" aria-live="polite">
+                    Incorrect password. Please try again.
+                </div>
+
+                <button class="btn btn-primary btn-unlock" id="unlock-btn" type="button" aria-label="Unlock vault">
+                    <span class="label-text">Unlock Vault</span>
+                </button>
+            </div>
+
+            <p class="login-footer">Encrypted · Client-side · Private</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+     DASHBOARD
+     ============================================================ -->
+    <main id="dashboard" aria-label="Emergency Vault Dashboard">
+
+        <!-- Header -->
+        <header class="dash-header">
+            <div class="dash-brand">
+                <div class="dash-brand-icon" aria-hidden="true"></div>
+                <div class="dash-brand-text">
+                    <h1>Emergency Vault</h1>
+                    <span id="dash-datetime"></span>
+                </div>
+            </div>
+            <div class="dash-actions">
+                <div class="session-badge" aria-live="polite">
+                    <div class="session-dot" aria-hidden="true"></div>
+                    <span id="session-timer-display">Session active</span>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="lock-btn" aria-label="Lock vault">Lock</button>
+            </div>
+        </header>
+
+        <!-- Grid -->
+        <div class="dash-grid">
+
+            <!-- SECTION 1: Contacts -->
+            <div class="glass section-card" id="contacts-card">
+                <div class="section-header">
+                    <div class="section-icon icon-purple" aria-hidden="true"></div>
+                    <div>
+                        <div class="section-title">Contacts</div>
+                        <div class="section-count" id="contacts-count"></div>
+                    </div>
+                </div>
+                <div class="section-search">
+                    <span class="s-icon" aria-hidden="true"></span>
+                    <input type="search" id="contacts-search" placeholder="Search contacts…"
+                        aria-label="Search contacts" />
+                </div>
+                <div class="contacts-list" id="contacts-list" role="list"></div>
+            </div>
+
+            <!-- SECTION 2: Links -->
+            <div class="glass section-card" id="links-card">
+                <div class="section-header">
+                    <div class="section-icon icon-blue" aria-hidden="true"></div>
+                    <div>
+                        <div class="section-title">Links</div>
+                        <div class="section-count" id="links-count"></div>
+                    </div>
+                </div>
+                <div class="section-search">
+                    <span class="s-icon" aria-hidden="true"></span>
+                    <input type="search" id="links-search" placeholder="Search links…" aria-label="Search links" />
+                </div>
+                <div class="links-list" id="links-list" role="list"></div>
+            </div>
+
+            <!-- SECTION 3: Discord -->
+            <div class="glass section-card" id="discord-card">
+                <div class="section-header">
+                    <div class="section-icon icon-teal" aria-hidden="true"></div>
+                    <div>
+                        <div class="section-title">Send Message</div>
+                        <div class="section-count">Via Discord</div>
+                    </div>
+                </div>
+                <div class="discord-section">
+                    <textarea id="discord-msg" placeholder="Your message here…" aria-label="Message"
+                        maxlength="2000"></textarea>
+                    <div class="char-counter" id="char-counter">0 / 2000</div>
+                    <div class="discord-footer">
+                        <button class="btn btn-primary btn-send" id="send-btn" type="button" aria-label="Send message">
+                            <span class="label-text">Send</span>
+                            <span class="spinner" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.dash-grid -->
+    </main><!-- /#dashboard -->
+
+    <!-- Session Timeout Overlay -->
+    <div id="timeout-overlay" role="dialog" aria-modal="true" aria-label="Session expired">
+        <div class="glass timeout-card">
+            <div class="timeout-icon" aria-hidden="true"></div>
+            <div class="timeout-title">Session Expired</div>
+            <p class="timeout-msg">Your vault has been locked due to inactivity. Please unlock again to continue.</p>
+            <button class="btn btn-primary" id="relock-btn" style="width:100%">Unlock Again</button>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+    <!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+    <script>
+        (function () {
+            "use strict";
+
+            /* =================================================================
+               ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+              ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
+              ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+              ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+              ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+               ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+          
+               EDIT EVERYTHING IN THIS SECTION TO PERSONALISE YOUR VAULT
+               ================================================================= */
+
+            /* ── Password ─────────────────────────────────────────────────── */
+            const CONFIG = {
+                PASSWORD: "myPassword",                   // ← Change this to your password
+                SESSION_TIMEOUT_MINUTES: 10,          // ← Minutes of inactivity before auto-lock (0 = disabled)
+            };
+
+            /* ── Contacts ─────────────────────────────────────────────────── */
+            const CONTACTS = [
+                { name: "Father", phone: "+923156479322" },
+                { name: "Brother", phone: "+923258233244" },
+            ];
+
+            /* ── Links ────────────────────────────────────────────────────── */
+            const LINKS = [
+                { title: "Google Drive", url: "https://drive.google.com" },
+                { title: "GitHub", url: "https://github.com" },
+                { title: "Gmail", url: "https://mail.google.com" },
+                { title: "Google Maps", url: "https://maps.google.com" },
+                { title: "PayPal", url: "https://paypal.com" },
+                { title: "WhatsApp Web", url: "https://web.whatsapp.com" },
+            ];
+
+            /* ── Discord Webhook ──────────────────────────────────────────── */
+            const DISCORD_WEBHOOK_URL = "Paste Your Discord Webhook URL";  // ← Your webhook URL
+
+            /* =================================================================
+               END OF CONFIGURATION — Do not edit below unless you know what
+               you are doing.
+               ================================================================= */
+
+
+            /* ================================================================
+               SECURITY LAYER: Anti-DevTools & Source-Inspection Countermeasures
+               ================================================================ */
+            (function applySecurityLayer() {
+                // Disable right-click context menu
+                document.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+
+                // Disable key combos used to open DevTools / view source
+                document.addEventListener("keydown", function (e) {
+                    const key = e.key || e.keyCode;
+                    // F12
+                    if (key === "F12" || e.keyCode === 123) { e.preventDefault(); return false; }
+                    // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+                    if (e.ctrlKey && e.shiftKey && ["I", "i", "J", "j", "C", "c"].includes(e.key)) { e.preventDefault(); return false; }
+                    // Ctrl+U (view source)
+                    if (e.ctrlKey && (e.key === "u" || e.key === "U")) { e.preventDefault(); return false; }
+                    // Ctrl+S (save page)
+                    if (e.ctrlKey && (e.key === "s" || e.key === "S")) { e.preventDefault(); return false; }
+                }, true);
+
+                // DevTools timing-based detection
+                let _devOpen = false;
+                const _threshold = 160;
+                function _checkDevTools() {
+                    const _s = performance.now();
+                    // eslint-disable-next-line no-debugger
+                    debugger; // pauses only if DevTools is open
+                    const _e = performance.now();
+                    if (_e - _s > _threshold) {
+                        if (!_devOpen) {
+                            _devOpen = true;
+                            // If DevTools detected while dashboard is shown, lock it.
+                            if (!document.getElementById("login-screen").classList.contains("hiding")) return;
+                            void lockVault();
+                        }
+                    } else {
+                        _devOpen = false;
+                    }
+                }
+                setInterval(_checkDevTools, 1500);
+            })();
+
+
+            /* ================================================================
+               CRYPTO UTILITIES — Password Hashing
+               ================================================================ */
+            async function _sha256(message) {
+                const msgBuffer = new TextEncoder().encode(message);
+                const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+            }
+
+            /* Pre-compute the hash of the configured password at startup.
+               The raw password is used only once here and then discarded. */
+            let _storedHash = null;
+            _sha256(CONFIG.PASSWORD).then(h => { _storedHash = h; });
+
+            async function _verifyPassword(input) {
+                if (!_storedHash) return false;
+                const inputHash = await _sha256(input);
+                // Constant-time comparison via length-safe string equality
+                if (inputHash.length !== _storedHash.length) return false;
+                let diff = 0;
+                for (let i = 0; i < inputHash.length; i++) {
+                    diff |= inputHash.charCodeAt(i) ^ _storedHash.charCodeAt(i);
+                }
+                return diff === 0;
+            }
+
+
+            /* ================================================================
+               SESSION MANAGEMENT
+               ================================================================ */
+            let _sessionTimer = null;
+            const _TIMEOUT_MS = CONFIG.SESSION_TIMEOUT_MINUTES * 60 * 1000;
+            let _sessionStart = null;
+            let _sessionDisplayInterval = null;
+
+            function _resetSessionTimer() {
+                if (!_TIMEOUT_MS) return;
+                clearTimeout(_sessionTimer);
+                _sessionTimer = setTimeout(function () {
+                    _showTimeoutOverlay();
+                }, _TIMEOUT_MS);
+            }
+
+            function _startSession() {
+                _sessionStart = Date.now();
+                _resetSessionTimer();
+                if (_TIMEOUT_MS) {
+                    document.addEventListener("mousemove", _resetSessionTimer, { passive: true });
+                    document.addEventListener("keydown", _resetSessionTimer, { passive: true });
+                    document.addEventListener("touchstart", _resetSessionTimer, { passive: true });
+                    document.addEventListener("click", _resetSessionTimer, { passive: true });
+                }
+                _sessionDisplayInterval = setInterval(_updateSessionDisplay, 1000);
+                _updateSessionDisplay();
+                _updateDateTime();
+                setInterval(_updateDateTime, 60000);
+            }
+
+            function _stopSession() {
+                clearTimeout(_sessionTimer);
+                clearInterval(_sessionDisplayInterval);
+                document.removeEventListener("mousemove", _resetSessionTimer);
+                document.removeEventListener("keydown", _resetSessionTimer);
+                document.removeEventListener("touchstart", _resetSessionTimer);
+                document.removeEventListener("click", _resetSessionTimer);
+            }
+
+            function _updateSessionDisplay() {
+                const el = document.getElementById("session-timer-display");
+                if (!el) return;
+                const elapsed = Math.floor((Date.now() - _sessionStart) / 1000);
+                const m = Math.floor(elapsed / 60), s = elapsed % 60;
+                el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")} active`;
+            }
+
+            function _updateDateTime() {
+                const el = document.getElementById("dash-datetime");
+                if (!el) return;
+                const now = new Date();
+                el.textContent = now.toLocaleString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+            }
+
+            function _showTimeoutOverlay() {
+                document.getElementById("timeout-overlay").classList.add("show");
+            }
+
+
+            /* ================================================================
+               TOAST NOTIFICATION SYSTEM
+               ================================================================ */
+            function showToast(message, type = "info", duration = 3200) {
+                const container = document.getElementById("toast-container");
+                const toast = document.createElement("div");
+                toast.className = `toast toast-${type}`;
+                const icons = { success: "[SUCCESS]", error: "[ERROR]", info: "[INFO]" };
+                toast.innerHTML = `<span aria-hidden="true">${icons[type] || "[INFO]"}</span> <span>${message}</span>`;
+                container.appendChild(toast);
+                const remove = () => {
+                    toast.classList.add("out");
+                    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 350);
+                };
+                setTimeout(remove, duration);
+                toast.addEventListener("click", remove);
+            }
+
+
+            /* ================================================================
+               AUTHENTICATION
+               ================================================================ */
+            const loginScreen = document.getElementById("login-screen");
+            const dashboard = document.getElementById("dashboard");
+            const passInput = document.getElementById("pass-input");
+            const unlockBtn = document.getElementById("unlock-btn");
+            const errorMsg = document.getElementById("error-msg");
+            const passToggle = document.getElementById("pass-toggle");
+
+            async function attemptUnlock() {
+                const pw = passInput.value;
+                if (!pw) { passInput.focus(); return; }
+
+                unlockBtn.classList.add("loading");
+                unlockBtn.disabled = true;
+                errorMsg.classList.remove("show");
+
+                // Artificial delay for anti-brute-force feel
+                await new Promise(r => setTimeout(r, 600));
+
+                const ok = await _verifyPassword(pw);
+                unlockBtn.classList.remove("loading");
+                unlockBtn.disabled = false;
+
+                if (ok) {
+                    passInput.value = "";
+                    _showDashboard();
+                } else {
+                    errorMsg.classList.add("show");
+                    passInput.value = "";
+                    passInput.focus();
+                    setTimeout(() => errorMsg.classList.remove("show"), 4000);
+                }
+            }
+
+            function _showDashboard() {
+                loginScreen.classList.add("hiding");
+                setTimeout(function () {
+                    loginScreen.style.display = "none";
+                    dashboard.classList.add("visible");
+                    requestAnimationFrame(function () {
+                        dashboard.classList.add("shown");
+                        _startSession();
+                        renderContacts(CONTACTS);
+                        renderLinks(LINKS);
+                    });
+                }, 500);
+            }
+
+            function lockVault() {
+                _stopSession();
+                dashboard.classList.remove("shown");
+                document.getElementById("timeout-overlay").classList.remove("show");
+                setTimeout(function () {
+                    dashboard.classList.remove("visible");
+                    loginScreen.style.display = "";
+                    loginScreen.classList.remove("hiding");
+                    loginScreen.style.opacity = "0";
+                    loginScreen.style.transform = "scale(0.96)";
+                    requestAnimationFrame(function () {
+                        loginScreen.style.transition = "opacity 0.4s, transform 0.4s";
+                        loginScreen.style.opacity = "1";
+                        loginScreen.style.transform = "scale(1)";
+                        setTimeout(function () {
+                            loginScreen.style.transition = "";
+                            passInput.focus();
+                        }, 400);
+                    });
+                }, 300);
+            }
+
+            unlockBtn.addEventListener("click", attemptUnlock);
+            passInput.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") { e.preventDefault(); attemptUnlock(); }
+            });
+
+            passToggle.addEventListener("click", function () {
+                const isPass = passInput.type === "password";
+                passInput.type = isPass ? "text" : "password";
+                passToggle.textContent = isPass ? "Hide" : "Show";
+            });
+
+            document.getElementById("lock-btn").addEventListener("click", lockVault);
+            document.getElementById("relock-btn").addEventListener("click", lockVault);
+
+
+            /* ================================================================
+               CONTACTS RENDERER
+               ================================================================ */
+            function renderContacts(list) {
+                const container = document.getElementById("contacts-list");
+                const countEl = document.getElementById("contacts-count");
+                container.innerHTML = "";
+                countEl.textContent = `${list.length} contact${list.length !== 1 ? "s" : ""}`;
+
+                if (!list.length) {
+                    container.innerHTML = `<div class="empty-state"><div class="es-icon"></div>No contacts found.</div>`;
+                    return;
+                }
+
+                list.forEach(function (c, i) {
+                    const initials = c.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+                    const item = document.createElement("div");
+                    item.className = "contact-item";
+                    item.setAttribute("role", "listitem");
+                    item.style.animationDelay = `${i * 0.05}s`;
+                    item.innerHTML = `
+        <div class="contact-avatar" aria-hidden="true">${initials}</div>
+        <div class="contact-info">
+          <div class="contact-name">${_escHtml(c.name)}</div>
+          <div class="contact-phone">
+            <span aria-hidden="true"></span>
+            <a href="tel:${_escHtml(c.phone)}" aria-label="Call ${_escHtml(c.name)}">${_escHtml(c.phone)}</a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <button class="btn-icon copy-btn" data-phone="${_escHtml(c.phone)}" title="Copy number" aria-label="Copy number for ${_escHtml(c.name)}">Copy</button>
+        </div>
+      `;
+                    container.appendChild(item);
+                });
+
+                // Copy buttons
+                container.querySelectorAll(".copy-btn").forEach(function (btn) {
+                    btn.addEventListener("click", function () {
+                        const phone = btn.dataset.phone;
+                        navigator.clipboard.writeText(phone).then(function () {
+                            showToast("Phone number copied!", "success");
+                            btn.textContent = "✓";
+                            setTimeout(() => { btn.textContent = "Copy"; }, 1800);
+                        }).catch(function () {
+                            // Fallback for older browsers
+                            const tmp = document.createElement("textarea");
+                            tmp.value = phone;
+                            tmp.style.cssText = "position:absolute;opacity:0;";
+                            document.body.appendChild(tmp);
+                            tmp.select();
+                            document.execCommand("copy");
+                            document.body.removeChild(tmp);
+                            showToast("Phone number copied!", "success");
+                        });
+                    });
+                });
+            }
+
+            /* Contacts search */
+            document.getElementById("contacts-search").addEventListener("input", function () {
+                const q = this.value.toLowerCase().trim();
+                const filtered = CONTACTS.filter(c =>
+                    c.name.toLowerCase().includes(q) || c.phone.includes(q)
+                );
+                renderContacts(filtered);
+            });
+
+
+            /* ================================================================
+               LINKS RENDERER
+               ================================================================ */
+            function renderLinks(list) {
+                const container = document.getElementById("links-list");
+                const countEl = document.getElementById("links-count");
+                container.innerHTML = "";
+                countEl.textContent = `${list.length} link${list.length !== 1 ? "s" : ""}`;
+
+                if (!list.length) {
+                    container.innerHTML = `<div class="empty-state"><div class="es-icon"></div>No links found.</div>`;
+                    return;
+                }
+
+                list.forEach(function (l, i) {
+                    const item = document.createElement("div");
+                    item.className = "link-item";
+                    item.setAttribute("role", "listitem");
+                    item.style.animationDelay = `${i * 0.05}s`;
+                    let displayUrl = "";
+                    try { displayUrl = new URL(l.url).hostname; } catch (e) { displayUrl = l.url; }
+                    item.innerHTML = `
+        <div class="link-emoji" aria-hidden="true"></div>
+        <div class="link-info">
+          <div class="link-title">${_escHtml(l.title)}</div>
+          <div class="link-url">${_escHtml(displayUrl)}</div>
+        </div>
+        <a class="link-open" href="${_escHtml(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${_escHtml(l.title)}">
+          Open
+        </a>
+      `;
+                    container.appendChild(item);
+                });
+            }
+
+            /* Links search */
+            document.getElementById("links-search").addEventListener("input", function () {
+                const q = this.value.toLowerCase().trim();
+                const filtered = LINKS.filter(l =>
+                    l.title.toLowerCase().includes(q) || l.url.toLowerCase().includes(q)
+                );
+                renderLinks(filtered);
+            });
+
+
+            /* ================================================================
+               DISCORD MESSENGER
+               ================================================================ */
+            const discordMsg = document.getElementById("discord-msg");
+            const charCounter = document.getElementById("char-counter");
+            const sendBtn = document.getElementById("send-btn");
+            const MAX_CHARS = 2000;
+
+            discordMsg.addEventListener("input", function () {
+                const len = discordMsg.value.length;
+                charCounter.textContent = `${len} / ${MAX_CHARS}`;
+                charCounter.className = "char-counter" +
+                    (len > MAX_CHARS - 200 && len < MAX_CHARS ? " warn" : "") +
+                    (len >= MAX_CHARS ? " over" : "");
+            });
+
+            discordMsg.addEventListener("keydown", function (e) {
+                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    sendDiscordMessage();
+                }
+            });
+
+            sendBtn.addEventListener("click", sendDiscordMessage);
+
+            /**
+             * sendDiscordMessage
+             * Sends a message through a Discord Webhook.
+             * To move to a backend, replace the fetch() inside _discordWebhookSend
+             * with a call to your server endpoint.
+             */
+            async function sendDiscordMessage() {
+                const text = discordMsg.value.trim();
+                if (!text) {
+                    showToast("Please write a message first.", "error");
+                    discordMsg.focus();
+                    return;
+                }
+                if (text.length > MAX_CHARS) {
+                    showToast(`Message exceeds ${MAX_CHARS} characters.`, "error");
+                    return;
+                }
+                if (!DISCORD_WEBHOOK_URL) {
+                    showToast("Discord webhook is not configured.", "error");
+                    return;
+                }
+
+                sendBtn.classList.add("loading");
+                sendBtn.disabled = true;
+
+                try {
+                    const response = await _discordWebhookSend(
+                        `${text}\n\nSent at: ${new Date().toLocaleString()}\n\nvia https://pevclm.netlify.app/`
+                    );
+
+                    if (response.ok) {
+                        showToast("Message sent", "success", 2000);
+                        discordMsg.value = "";
+                        charCounter.textContent = `0 / ${MAX_CHARS}`;
+                        charCounter.className = "char-counter";
+                    } else {
+                        const errData = await response.json().catch(() => ({}));
+                        const errMsg = errData.message || `HTTP ${response.status}`;
+                        showToast(`Failed to send: ${errMsg}`, "error", 5000);
+                    }
+                } catch (err) {
+                    showToast("Network error. Check your connection.", "error", 5000);
+                } finally {
+                    sendBtn.classList.remove("loading");
+                    sendBtn.disabled = false;
+                }
+            }
+
+            /**
+             * _discordWebhookSend — Isolated Discord Webhook call.
+             * To move to a backend, replace the URL with your server endpoint.
+             */
+            function _discordWebhookSend(content) {
+                return fetch(DISCORD_WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ content }),
+                });
+            }
+
+
+            /* ================================================================
+               UTILITY — HTML Escape
+               ================================================================ */
+            function _escHtml(str) {
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+            }
+
+
+            /* ================================================================
+               INIT — Focus password on load
+               ================================================================ */
+            window.addEventListener("load", function () {
+                setTimeout(function () { passInput.focus(); }, 200);
+            });
+
+            /* Expose lockVault for the global scope (used by timeout overlay btn) */
+            window._lockVault = lockVault;
+
+        })();
+    </script>
+</body>
+
+</html>
