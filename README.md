@@ -2,7 +2,7 @@
 
 A secure, client-side encrypted emergency vault to store your critical contacts, links, and send emergency messages via Discord. Designed to be accessed quickly when needed while keeping your data private.
 
-🌐 **Live Demo**: [https://afnan-nex.github.io/personal-emergency-vault/index.html](https://afnan-nex.github.io/personal-emergency-vault/index.html)
+🌐 **Live Demo**: [**Try Personal Emergency Vault**](https://afnan-nex.github.io/personal-emergency-vault/index.html)
 
 **Default Password**: 1234
 
