@@ -4,6 +4,7 @@ A secure, client-side encrypted emergency vault to store your critical contacts,
 
 🌐 **Live Demo**: [https://afnan-nex.github.io/personal-emergency-vault/index.html](https://afnan-nex.github.io/personal-emergency-vault/index.html)
 
+**Default Password**: 1234
 ---
 
 ## ⚠️ CRITICAL SECURITY WARNING ⚠️
